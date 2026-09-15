@@ -43,13 +43,27 @@ a{color:inherit}
 @keyframes drift{to{background-position:124px 46px,-96px 34px}}
 .b-brand>*,.b-ink>*{position:relative}
 
+/* ---------- scroll progress ---------- */
+#prog{position:fixed;top:0;left:0;height:3px;width:0;background:#fff;z-index:99;transition:width .1s linear}
+
+/* ---------- live rail ---------- */
+.rail{border-top:1px solid rgba(255,255,255,.18);border-bottom:1px solid rgba(255,255,255,.18);
+      background:rgba(0,0,0,.10);position:relative;z-index:2}
+.railr{display:flex;gap:0;flex-wrap:wrap;padding:11px 24px;font-family:var(--m);font-size:11.5px}
+.railr span{display:flex;align-items:baseline;gap:8px;padding:0 20px;border-right:1px solid rgba(255,255,255,.2)}
+.railr span:first-child{padding-left:0}
+.railr span:last-child{border-right:0}
+.railr i{font-style:normal;letter-spacing:.13em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+.railr b{color:#fff;font-weight:600;font-variant-numeric:tabular-nums}
+
 /* ---------- nav ---------- */
 .nav{position:sticky;top:0;z-index:60;background:rgba(22,104,245,.94);backdrop-filter:blur(10px);
      border-bottom:1px solid rgba(255,255,255,.16)}
 .nb{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:12px 0}
 .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.02em;font-size:19px;
        color:#fff;text-decoration:none}
-.brand img{width:30px;height:30px;border-radius:8px;display:block}
+.brand img{width:40px;height:40px;border-radius:11px;display:block;transition:transform .2s}
+.brand:hover img{transform:rotate(-4deg) scale(1.04)}
 .nlinks{display:flex;justify-content:center;gap:26px;flex-wrap:wrap}
 .nlinks a{color:rgba(255,255,255,.88);text-decoration:none;font-size:14.5px;font-weight:600}
 .nlinks a:hover{color:#fff}
@@ -75,7 +89,7 @@ h2{font-size:clamp(28px,3.6vw,46px);line-height:1.06;letter-spacing:-.03em;margi
 .wm b{background:#fff;color:var(--az);border-radius:.2em;padding:0 .1em .02em;font-weight:800}
 
 /* ---------- hero ---------- */
-.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:52px;align-items:center;padding:76px 0 84px}
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:52px;align-items:center;padding:76px 24px 84px}
 .pill{display:flex;gap:8px;background:#fff;border-radius:15px;padding:7px;max-width:470px;
       box-shadow:0 10px 30px rgba(6,32,90,.18)}
 .pill input{flex:1;border:0;outline:0;font:inherit;font-size:16px;padding:12px 14px;border-radius:10px;color:var(--ink)}
@@ -97,9 +111,12 @@ h2{font-size:clamp(28px,3.6vw,46px);line-height:1.06;letter-spacing:-.03em;margi
 .chd .on{color:var(--ok);display:inline-flex;align-items:center;gap:6px}
 .sw{transition:opacity .34s,transform .34s}
 .sw.out{opacity:0;transform:translateY(8px)}
-.av{width:78px;height:78px;border-radius:50%;background:var(--tint);object-fit:cover;display:block;
-    margin:0 auto 12px;opacity:0;transition:opacity .3s}
+.ring{width:96px;height:96px;border-radius:50%;margin:0 auto 12px;padding:5px;
+      background:conic-gradient(var(--az) 0turn,var(--line) 0turn);display:grid;place-items:center}
+.av{width:86px;height:86px;border-radius:50%;background:var(--tint);object-fit:cover;display:block;
+    opacity:0;transition:opacity .3s}
 .av.ok{opacity:1}
+.fol{text-align:center;font-family:var(--m);font-size:11px;color:var(--mut);margin-top:6px;letter-spacing:.06em}
 .cn{text-align:center;font-weight:800;font-size:20px;letter-spacing:-.02em}
 .ch{text-align:center;color:var(--mut);font-size:13.5px;margin-top:2px}
 .hrs{margin-top:16px;background:var(--tint);border-radius:13px;padding:13px 15px;display:flex;
@@ -129,7 +146,11 @@ h2{font-size:clamp(28px,3.6vw,46px);line-height:1.06;letter-spacing:-.03em;margi
 .sec{padding:78px 0}
 .hd{max-width:620px;margin-bottom:40px}
 .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
-.step{padding:26px 22px 26px 0;border-top:1.5px solid var(--line)}
+.step{padding:26px 22px 26px 0;border-top:1.5px solid var(--line);position:relative;transition:.22s}
+.step::before{content:"";position:absolute;top:-1.5px;left:0;height:1.5px;width:0;background:var(--az);transition:width .35s}
+.b-brand .step::before,.b-ink .step::before{background:#fff}
+.step:hover::before{width:100%}
+.step:hover{transform:translateY(-3px)}
 .b-brand .step,.b-ink .step{border-color:rgba(255,255,255,.26)}
 .step i{font-style:normal;font-family:var(--m);font-size:12px;color:var(--az);font-weight:700}
 .b-brand .step i,.b-ink .step i{color:#fff;opacity:.72}
@@ -157,7 +178,8 @@ h2{font-size:clamp(28px,3.6vw,46px);line-height:1.06;letter-spacing:-.03em;margi
 .b-brand .code{color:#fff}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{border:1.5px solid var(--line);background:#fff;border-radius:11px;padding:9px 13px;font:inherit;
-      font-size:13.5px;font-weight:600;cursor:pointer;color:var(--ink)}
+      font-size:13.5px;font-weight:600;cursor:pointer;color:var(--ink);transition:.16s}
+.chip:hover{border-color:var(--az);transform:translateY(-1px)}
 .chip.on{border-color:var(--az);background:#e7efff;color:var(--az)}
 .note{font-size:13px;color:var(--mut);margin:10px 0 0}
 .b-brand .note{color:rgba(255,255,255,.66)}
@@ -169,7 +191,8 @@ h2{font-size:clamp(28px,3.6vw,46px);line-height:1.06;letter-spacing:-.03em;margi
 .s1{background:var(--az)}.s2{background:#4b8bfb}.s3{background:var(--ink2)}
 
 /* ---------- wall / empty ---------- */
-.empty{border:1.5px dashed var(--line);border-radius:18px;padding:52px 30px;text-align:center}
+.empty{border:1.5px dashed var(--line);border-radius:18px;padding:52px 30px;text-align:center;transition:.22s}
+.empty:hover{border-color:var(--az);background:#f7faff}
 .empty h3{margin:0 0 10px;font-size:22px;letter-spacing:-.02em}
 .empty p{margin:0 auto 22px;color:var(--grey);max-width:44ch;font-size:15px}
 
@@ -190,12 +213,76 @@ summary::after{content:"+";color:var(--az);font-weight:800}
 details[open] summary::after{content:"–"}
 details p{margin:12px 0 0;color:var(--grey);font-size:15px;max-width:68ch}
 
+/* ---------- orbiting handle chips ---------- */
+.stage{min-height:470px}
+.glow{position:absolute;width:420px;height:420px;border-radius:50%;pointer-events:none;
+      background:radial-gradient(circle,rgba(255,255,255,.30),rgba(255,255,255,0) 68%);filter:blur(6px)}
+.orb{position:absolute;display:flex;align-items:center;gap:9px;background:#fff;color:var(--ink);
+     border-radius:13px;padding:7px 12px 7px 7px;box-shadow:0 14px 34px rgba(4,26,74,.26);
+     font-size:12.5px;font-weight:700;letter-spacing:-.01em;white-space:nowrap;
+     animation:fl 6s ease-in-out infinite;will-change:transform;z-index:3}
+.orb img{width:26px;height:26px;border-radius:50%;background:var(--tint);object-fit:cover;display:block}
+.orb u{text-decoration:none;font-family:var(--m);font-size:10.5px;color:var(--az);font-weight:700;
+       background:var(--tint);border-radius:6px;padding:2px 6px;margin-left:2px}
+@keyframes fl{50%{transform:translateY(-11px)}}
+.o1{left:-30px;top:22px;animation-duration:6.4s}
+.o2{right:-34px;top:152px;animation-duration:7.6s;animation-delay:-2s}
+.o3{left:-48px;top:236px;animation-duration:6.9s;animation-delay:-3.4s}
+.o4{right:-12px;bottom:10px;animation-duration:8.2s;animation-delay:-1.2s}
+
+/* ---------- nav active section ---------- */
+.nlinks a{position:relative;padding-bottom:3px}
+.nlinks a::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:#fff;
+                 transform:scaleX(0);transform-origin:left;transition:transform .22s}
+.nlinks a.act::after,.nlinks a:hover::after{transform:scaleX(1)}
+
+/* ---------- the wall: ghost slots ---------- */
+.ghosts{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:22px}
+.gh{border:1.5px dashed var(--line);border-radius:18px;padding:20px;background:#fbfdff;
+    position:relative;overflow:hidden}
+.gh::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(105deg,transparent 30%,rgba(22,104,245,.07) 50%,transparent 70%);
+  transform:translateX(-100%);animation:shim 3.4s linear infinite}
+.gh:nth-child(2)::after{animation-delay:.9s}.gh:nth-child(3)::after{animation-delay:1.8s}
+@keyframes shim{to{transform:translateX(100%)}}
+.ghh{display:flex;align-items:center;gap:11px;margin-bottom:16px}
+.ghc{width:38px;height:38px;border-radius:50%;background:var(--tint)}
+.ghl{height:9px;border-radius:5px;background:var(--tint)}
+.ghr{display:flex;justify-content:space-between;align-items:center;padding:9px 0;
+     border-top:1px solid var(--line);font-family:var(--m);font-size:11px;color:var(--mut)}
+.ghr b{color:var(--line);font-weight:700;letter-spacing:.1em}
+.gslot{position:absolute;top:14px;right:16px;font-family:var(--m);font-size:10px;letter-spacing:.14em;
+       text-transform:uppercase;color:var(--mut)}
+
+/* ---------- footer ---------- */
+.foot{padding:70px 0 0;position:relative}
+.fgrid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;padding-bottom:44px}
+.flogo{width:46px;height:46px;border-radius:13px;display:block;margin-bottom:16px}
+.ftag{margin:0 0 16px;color:rgba(255,255,255,.72);font-size:15px;max-width:34ch}
+.foot h4{margin:0 0 14px;font-family:var(--m);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+         color:rgba(255,255,255,.5);font-weight:600}
+.fcol a,.fcol span{display:block;color:rgba(255,255,255,.82);text-decoration:none;font-size:14.5px;
+                   padding:5px 0;transition:.16s}
+.fcol a:hover{color:#fff;transform:translateX(3px)}
+.fcol span{color:rgba(255,255,255,.45)}
+.fca{border:1px solid rgba(255,255,255,.2);border-radius:14px;padding:16px 18px;font-size:13.5px;
+     color:rgba(255,255,255,.78);background:rgba(255,255,255,.05);margin-bottom:26px}
+.fca b{color:#fff}
+.fbot{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;
+      border-top:1px solid rgba(255,255,255,.16);padding:20px 0 26px;font-size:12.5px;
+      color:rgba(255,255,255,.55);font-family:var(--m)}
+.fbot a{color:rgba(255,255,255,.8);text-decoration:none}
+.fbot a:hover{color:#fff}
+.fbig{font-weight:800;letter-spacing:-.06em;line-height:.74;text-align:center;
+      font-size:clamp(90px,21vw,290px);color:rgba(255,255,255,.055);margin-bottom:-.14em;
+      pointer-events:none;user-select:none}
+
 /* ---------- reveal ---------- */
 .rv{opacity:0;transform:translateY(14px);transition:opacity .55s,transform .55s}
 .rv.vis{opacity:1;transform:none}
 
 @media(max-width:900px){
-  .hero{grid-template-columns:1fr;gap:34px;padding:52px 0 60px}
+  .hero{grid-template-columns:1fr;gap:34px;padding:52px 24px 60px}
   .grid2{grid-template-columns:1fr;gap:30px}
   .steps{grid-template-columns:1fr 1fr}
   .nlinks{display:none}
@@ -203,14 +290,31 @@ details p{margin:12px 0 0;color:var(--grey);font-size:15px;max-width:68ch}
   .sec{padding:56px 0}
 }
 @media(max-width:560px){.steps{grid-template-columns:1fr}.card{width:100%}}
+@media(max-width:1260px){
+  .orb{font-size:11.5px;padding:6px 10px 6px 6px;gap:7px}
+  .orb img{width:22px;height:22px}
+  .orb u{font-size:10px;padding:1px 5px}
+  .o1{left:-14px}.o2{right:-6px}.o3{left:-26px}.o4{right:4px}
+}
+@media(max-width:1040px){.o3{display:none}}
+@media(max-width:900px){
+  .stage{min-height:380px}
+  .orb{display:none}
+  .ghosts{grid-template-columns:1fr}
+  .gh:nth-child(3){display:none}
+  .fgrid{grid-template-columns:1fr 1fr;gap:28px}
+  .foot{padding-top:52px}
+}
+@media(max-width:560px){.fgrid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
+<div id="prog"></div>
 
 <div class="band b-brand">
   <nav class="nav">
     <div class="wrap nb">
-      <a class="brand" href="#top"><img src="logo.png" alt="">afk</a>
+      <a class="brand" href="#top" aria-label="AFK"><img src="logo.png" alt="AFK"></a>
       <div class="nlinks">
         <a href="#how">How it works</a>
         <a href="#launch">Launch</a>
@@ -221,6 +325,17 @@ details p{margin:12px 0 0;color:var(--grey);font-size:15px;max-width:68ch}
       <div class="nright"><a class="btn btn-w" href="#launch">Launch a coin ↗</a></div>
     </div>
   </nav>
+
+  <div class="rail bleed">
+    <div class="railr">
+      <span><i>Chain</i><b>Robinhood · 4663</b></span>
+      <span><i>Block</i><b id="rBlock">—</b></span>
+      <span><i>Transactions</i><b id="rTx">—</b></span>
+      <span><i>Handles indexed</i><b id="rHandles">18</b></span>
+      <span><i>Vault pays</i><b>every hour</b></span>
+      <span><i>Next payout</i><b id="rNext">—</b></span>
+    </div>
+  </div>
 
   <div class="wrap hero" id="top">
     <div>
@@ -235,16 +350,22 @@ details p{margin:12px 0 0;color:var(--grey);font-size:15px;max-width:68ch}
       <p class="live"><i class="dot"></i> Built on Pons · readers live</p>
     </div>
     <div class="stage">
+      <div class="glow"></div>
       <div class="card" id="card">
         <div class="chd"><span>Holding</span><span class="on"><i class="dot"></i> Live</span></div>
         <div class="sw" id="sw">
-          <img class="av" id="cav" alt="">
+          <div class="ring" id="ring"><img class="av" id="cav" alt=""></div>
           <div class="cn" id="cname">—</div>
           <div class="ch" id="chandle">—</div>
+          <div class="fol" id="cfol">&nbsp;</div>
         </div>
         <div class="hrs"><span>Hours banked</span><b id="chours">0</b></div>
         <div class="pay"><span>Next payout</span><b id="cnext">in 00:00</b></div>
       </div>
+      <div class="orb o1" id="o1"></div>
+      <div class="orb o2" id="o2"></div>
+      <div class="orb o3" id="o3"></div>
+      <div class="orb o4" id="o4"></div>
     </div>
   </div>
 </div>
@@ -357,6 +478,26 @@ details p{margin:12px 0 0;color:var(--grey);font-size:15px;max-width:68ch}
       <p class="kick">Every coin launched here</p>
       <h2>The wall.</h2>
     </div>
+    <div class="ghosts rv">
+      <div class="gh"><span class="gslot">Slot 01</span>
+        <div class="ghh"><div class="ghc"></div><div style="flex:1"><div class="ghl" style="width:58%;margin-bottom:7px"></div><div class="ghl" style="width:38%;height:7px"></div></div></div>
+        <div class="ghr"><span>Pays in</span><b>————</b></div>
+        <div class="ghr"><span>Hours banked</span><b>————</b></div>
+        <div class="ghr"><span>Vault</span><b>————</b></div>
+      </div>
+      <div class="gh"><span class="gslot">Slot 02</span>
+        <div class="ghh"><div class="ghc"></div><div style="flex:1"><div class="ghl" style="width:44%;margin-bottom:7px"></div><div class="ghl" style="width:52%;height:7px"></div></div></div>
+        <div class="ghr"><span>Pays in</span><b>————</b></div>
+        <div class="ghr"><span>Hours banked</span><b>————</b></div>
+        <div class="ghr"><span>Vault</span><b>————</b></div>
+      </div>
+      <div class="gh"><span class="gslot">Slot 03</span>
+        <div class="ghh"><div class="ghc"></div><div style="flex:1"><div class="ghl" style="width:64%;margin-bottom:7px"></div><div class="ghl" style="width:30%;height:7px"></div></div></div>
+        <div class="ghr"><span>Pays in</span><b>————</b></div>
+        <div class="ghr"><span>Hours banked</span><b>————</b></div>
+        <div class="ghr"><span>Vault</span><b>————</b></div>
+      </div>
+    </div>
     <div class="empty rv">
       <h3>The wall is empty.</h3>
       <p>No coin has been launched on AFK yet, so there is nothing to show and nothing to invent. The first one on this wall could be yours.</p>
@@ -397,6 +538,43 @@ details p{margin:12px 0 0;color:var(--grey);font-size:15px;max-width:68ch}
   </div>
 </section>
 
+<footer class="foot band b-ink">
+  <div class="wrap">
+    <div class="fgrid">
+      <div>
+        <img class="flogo" src="logo.png" alt="AFK">
+        <p class="ftag">Get paid to log off. Every hour you hold, the vault pays you in a real stock.</p>
+        <p class="live"><i class="dot"></i> Readers live · nothing cached</p>
+      </div>
+      <div class="fcol">
+        <h4>Site</h4>
+        <a href="#how">How it works</a>
+        <a href="#launch">Launch a coin</a>
+        <a href="#math">The maths</a>
+        <a href="#wall">The wall</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div class="fcol">
+        <h4>Chain</h4>
+        <a href="https://ponsvault.com/launch" target="_blank" rel="noopener">Pons launchpad ↗</a>
+        <a href="https://robinhoodchain.blockscout.com" target="_blank" rel="noopener">Robinhood Chain explorer ↗</a>
+        <span>Chain ID 4663</span>
+      </div>
+      <div class="fcol" id="fsocial">
+        <h4>Follow</h4>
+        <span>X account announced at launch</span>
+      </div>
+    </div>
+    <div class="fca" id="fca"><b>No contract address yet.</b> When $AFK is live the CA appears at the top of this page and in the pinned post. Anyone posting one before that is scamming you.</div>
+    <div class="fbot">
+      <span>© 2026 AFK</span>
+      <span>Not investment advice. AFK is not affiliated with X, Robinhood, Pons or any handle shown.</span>
+      <a href="#top">Back to top ↑</a>
+    </div>
+  </div>
+  <div class="fbig" aria-hidden="true">afk</div>
+</footer>
+
 <script>
 const CONFIG={ca:'',x:'',pool:'',chart:'',launchpad:'https://ponsvault.com/launch'};
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
@@ -421,15 +599,16 @@ function avatarURL(h){return '/api/avatar?h='+encodeURIComponent(h.replace(/^@/,
 const ROTA=['blknoiz06','Cupseyy','notthreadguy','inversebrah','CryptoKaleo','MustStopMurad','cobie','zachxbt'];
 let ri=0, hoursSeed=[];
 ROTA.forEach((h,i)=>hoursSeed.push(0));
-function paintCard(j,h,idx){
+function paintCard(j,h){
   const sw=$('#sw'); sw.classList.add('out');
   setTimeout(()=>{
     $('#cname').textContent=j&&j.name?j.name:'@'+h;
     $('#chandle').textContent='@'+(j&&j.handle?j.handle:h);
+    $('#cfol').textContent=j&&j.followers!=null?j.followers.toLocaleString()+' followers':'\u00a0';
     const img=$('#cav'); img.classList.remove('ok'); img.onload=()=>img.classList.add('ok');
     img.src=avatarURL(h);
     sw.classList.remove('out');
-  },340);
+  },320);
 }
 async function spin(){
   const h=ROTA[ri%ROTA.length];
@@ -443,11 +622,35 @@ function nextHour(){
   const n=new Date(), s=3600-(n.getUTCMinutes()*60+n.getUTCSeconds());
   const m=String(Math.floor(s/60)).padStart(2,'0'), ss=String(s%60).padStart(2,'0');
   $('#cnext').textContent='in '+m+':'+ss;
+  const r=$('#rNext'); if(r) r.textContent=m+':'+ss;
 }
 setInterval(nextHour,1000); nextHour();
-spin(); let spinner=setInterval(spin,4600);
-$('#card').addEventListener('mouseenter',()=>clearInterval(spinner));
-$('#card').addEventListener('mouseleave',()=>spinner=setInterval(spin,4600));
+spin(); setInterval(spin,3200);   /* never pauses — the card is always moving */
+
+/* the ring fills with the real UTC hour */
+function ring(){
+  const n=new Date(), f=(n.getUTCMinutes()*60+n.getUTCSeconds())/3600;
+  $('#ring').style.background='conic-gradient(var(--az) '+f.toFixed(4)+'turn, var(--line) 0turn)';
+}
+setInterval(ring,1000); ring();
+
+/* live chain rail — Blockscout answers the browser even when it 403s the server */
+async function rail(){
+  try{
+    const r=await fetch('https://robinhoodchain.blockscout.com/api/v2/stats',{headers:{accept:'application/json'}});
+    if(!r.ok) return;
+    const j=await r.json();
+    if(j.total_blocks!=null) $('#rBlock').textContent=(+j.total_blocks).toLocaleString();
+    if(j.total_transactions!=null) $('#rTx').textContent=(+j.total_transactions).toLocaleString();
+  }catch(e){}
+}
+rail(); setInterval(rail,20000);
+
+/* scroll progress */
+addEventListener('scroll',()=>{
+  const h=document.documentElement;
+  $('#prog').style.width=(h.scrollTop/(h.scrollHeight-h.clientHeight)*100)+'%';
+},{passive:true});
 
 /* ---------- marquee ---------- */
 const MQ=['blknoiz06','cobie','notthreadguy','Cupseyy','inversebrah','CryptoKaleo','MustStopMurad',
@@ -511,6 +714,15 @@ $$('#stockChips .chip').forEach(c=>c.onclick=()=>{
 });
 paintSplit();
 
+function countUp(el,to,ms=800){
+  const t0=performance.now();
+  (function step(t){
+    const k=Math.min(1,(t-t0)/ms), e=1-Math.pow(1-k,3);
+    el.textContent=money(to*e);
+    if(k<1)requestAnimationFrame(step);
+  })(t0);
+}
+
 /* ---------- coin reader ---------- */
 async function readCoin(){
   const ca=$('#ca').value.trim().toLowerCase();
@@ -523,8 +735,7 @@ async function readCoin(){
     $('#mHold').textContent=j.holders!=null?j.holders.toLocaleString():'—';
     if(j.volume24!=null){
       const day=j.volume24*0.005;
-      $('#mDay').textContent=money(day);
-      $('#mHour').textContent=money(day/24);
+      countUp($('#mDay'),day); countUp($('#mHour'),day/24);
     }else{$('#mDay').textContent='—';$('#mHour').textContent='—'}
     if(j.holders==null) retryHolders(ca,0);
   }catch(e){$('#mName').textContent='could not read'}
@@ -545,6 +756,52 @@ async function retryHolders(ca,n){
 $('#cb').onclick=readCoin;
 $('#ca').addEventListener('keydown',e=>{if(e.key==='Enter')readCoin()});
 readCoin();
+
+/* ---------- orbiting hero chips ---------- */
+(function(){
+  const pool=['cobie','zachxbt','inversebrah','frankdegods','Cented7','orangie','IcoBeast','traderpow',
+              'gainzy222','HsakaTrades','nyhrox','mrpunkdoteth','Kookcapitalllc','loomdart'];
+  const els=['#o1','#o2','#o3','#o4'].map(s=>$(s)).filter(Boolean);
+  for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
+  let k=0;
+  const live=()=>els.map(e=>e.dataset.h);
+  const paint=(el,h,hrs)=>{
+    el.dataset.h=h; el.innerHTML='';
+    const i=document.createElement('img'); i.referrerPolicy='no-referrer'; i.alt=''; i.src=avatarURL(h);
+    const s=document.createElement('span'); s.textContent='@'+h;
+    const u=document.createElement('u'); u.textContent=hrs+'h';
+    el.append(i,s,u);
+  };
+  els.forEach((el,n)=>paint(el,pool[n%pool.length],14+n*11));
+  k=els.length;
+  setInterval(()=>{
+    const n=Math.floor(Math.random()*els.length), el=els[n];
+    let tries=0,h;
+    do{h=pool[k++%pool.length]}while(live().includes(h)&&++tries<pool.length);
+    el.style.transition='opacity .3s'; el.style.opacity='0';
+    setTimeout(()=>{paint(el,h,6+Math.floor(Math.random()*54)); el.style.opacity='1'},320);
+  },2600);
+})();
+
+/* ---------- nav active section ---------- */
+(function(){
+  const links=$$('.nlinks a'); if(!links.length) return;
+  const map={}; links.forEach(a=>{const id=a.getAttribute('href').slice(1); if(id) map[id]=a});
+  const secs=Object.keys(map).map(id=>document.getElementById(id)).filter(Boolean);
+  const nio=new IntersectionObserver(es=>{
+    es.forEach(e=>{if(e.isIntersecting){links.forEach(a=>a.classList.remove('act'));
+      const a=map[e.target.id]; if(a)a.classList.add('act')}});
+  },{rootMargin:'-45% 0px -50% 0px'});
+  secs.forEach(x=>nio.observe(x));
+})();
+
+/* ---------- footer: show the X link / CA once CONFIG has them ---------- */
+(function(){
+  if(CONFIG.x){const c=$('#fsocial'); c.innerHTML='<h4>Follow</h4>';
+    const a=document.createElement('a'); a.href=CONFIG.x; a.target='_blank'; a.rel='noopener';
+    a.textContent='@'+CONFIG.x.split('/').pop()+' ↗'; c.append(a)}
+  if(CONFIG.ca)$('#fca').innerHTML='<b>Contract address</b><br>'+CONFIG.ca;
+})();
 
 /* ---------- reveal ---------- */
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}}),{threshold:.12});
