@@ -764,7 +764,8 @@ readCoin();
   const els=['#o1','#o2','#o3','#o4'].map(s=>$(s)).filter(Boolean);
   for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
   let k=0;
-  const live=()=>els.map(e=>e.dataset.h);
+  const live=()=>els.map(e=>e.dataset.h)
+      .concat([($('#chandle').textContent||'').replace(/^@/,'')]);
   const paint=(el,h,hrs)=>{
     el.dataset.h=h; el.innerHTML='';
     const i=document.createElement('img'); i.referrerPolicy='no-referrer'; i.alt=''; i.src=avatarURL(h);
@@ -774,6 +775,16 @@ readCoin();
   };
   els.forEach((el,n)=>paint(el,pool[n%pool.length],14+n*11));
   k=els.length;
+  // if the card lands on a handle a chip is showing, swap that chip at once
+  const sweep=()=>{
+    const cur=($('#chandle').textContent||'').replace(/^@/,'');
+    const dup=els.find(e=>e.dataset.h===cur); if(!dup) return;
+    let tries=0,h; do{h=pool[k++%pool.length]}while(live().includes(h)&&++tries<pool.length);
+    dup.style.transition='opacity .3s'; dup.style.opacity='0';
+    setTimeout(()=>{paint(dup,h,6+Math.floor(Math.random()*54)); dup.style.opacity='1'},320);
+  };
+  new MutationObserver(sweep).observe($('#chandle'),{childList:true,characterData:true,subtree:true});
+  setInterval(sweep,2000);
   setInterval(()=>{
     const n=Math.floor(Math.random()*els.length), el=els[n];
     let tries=0,h;
