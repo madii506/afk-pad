@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AFK</title>
+<meta name="description" content="Get paid to log off. Every hour you hold, the vault pays you in stocks.">
+<link rel="icon" href="favicon-64.png">
+<link rel="apple-touch-icon" href="favicon-180.png">
+<style>
+:root{
+  --az:#1668f5; --az2:#0d46be; --az3:#0a3691;
+  --ink:#0b1b3a; --ink2:#132a52;
+  --paper:#fff; --tint:#eef3ff; --line:#d7e2f7;
+  --grey:#5c6d8c; --mut:#8a99b5;
+  --ok:#17a565;
+  --f:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+  --m:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{overflow-x:hidden;scroll-behavior:smooth}
+body{overflow-x:clip;margin:0;background:var(--paper);color:var(--ink);font-family:var(--f);
+     -webkit-font-smoothing:antialiased;font-size:16px;line-height:1.55}
+[hidden]{display:none!important}
+img{max-width:100%}
+section[id]{scroll-margin-top:22px}
+a{color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+.bleed{width:100vw;margin-left:calc(50% - 50vw)}
+
+/* ---------- bands ---------- */
+.band{position:relative;overflow:hidden}
+.b-brand{background:var(--az);color:#fff}
+.b-white{background:var(--paper)}
+.b-tint{background:var(--tint)}
+.b-ink{background:var(--ink);color:#fff}
+.b-brand::before,.b-ink::before{
+  content:"";position:absolute;inset:-60px;pointer-events:none;opacity:1;
+  background-image:repeating-linear-gradient(115deg,rgba(255,255,255,.13) 0 30px,transparent 30px 96px),
+                   repeating-linear-gradient(115deg,rgba(255,255,255,.07) 0 14px,transparent 14px 168px);
+  animation:drift 40s linear infinite}
+.b-ink::before{opacity:.5}
+@keyframes drift{to{background-position:124px 46px,-96px 34px}}
+.b-brand>*,.b-ink>*{position:relative}
+
+/* ---------- nav ---------- */
+.nav{position:sticky;top:0;z-index:60;background:rgba(22,104,245,.94);backdrop-filter:blur(10px);
+     border-bottom:1px solid rgba(255,255,255,.16)}
+.nb{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding:12px 0}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.02em;font-size:19px;
+       color:#fff;text-decoration:none}
+.brand img{width:30px;height:30px;border-radius:8px;display:block}
+.nlinks{display:flex;justify-content:center;gap:26px;flex-wrap:wrap}
+.nlinks a{color:rgba(255,255,255,.88);text-decoration:none;font-size:14.5px;font-weight:600}
+.nlinks a:hover{color:#fff}
+.nright{justify-self:end}
+.btn{display:inline-flex;align-items:center;gap:8px;border:0;cursor:pointer;font-family:inherit;
+     font-weight:700;font-size:14.5px;border-radius:12px;padding:11px 18px;text-decoration:none;transition:.16s}
+.btn-w{background:#fff;color:var(--az)}
+.btn-w:hover{transform:translateY(-1px)}
+.btn-b{background:var(--az);color:#fff}
+.btn-b:hover{background:var(--az2)}
+.btn-o{background:transparent;color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.55)}
+.btn-o:hover{box-shadow:inset 0 0 0 1.5px #fff}
+
+/* ---------- type ---------- */
+.kick{font-family:var(--m);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+      color:rgba(255,255,255,.72);margin:0 0 16px}
+.b-white .kick,.b-tint .kick{color:var(--mut)}
+h1{font-size:clamp(40px,6.4vw,82px);line-height:1.0;letter-spacing:-.035em;margin:0 0 20px;font-weight:800}
+h2{font-size:clamp(28px,3.6vw,46px);line-height:1.06;letter-spacing:-.03em;margin:0 0 28px;font-weight:800}
+.lead{font-size:17.5px;color:rgba(255,255,255,.86);max-width:50ch;margin:0 0 26px}
+.b-white .lead,.b-tint .lead{color:var(--grey)}
+.wm{font-weight:800;letter-spacing:-.04em}
+.wm b{background:#fff;color:var(--az);border-radius:.2em;padding:0 .1em .02em;font-weight:800}
+
+/* ---------- hero ---------- */
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:52px;align-items:center;padding:76px 0 84px}
+.pill{display:flex;gap:8px;background:#fff;border-radius:15px;padding:7px;max-width:470px;
+      box-shadow:0 10px 30px rgba(6,32,90,.18)}
+.pill input{flex:1;border:0;outline:0;font:inherit;font-size:16px;padding:12px 14px;border-radius:10px;color:var(--ink)}
+.pill input::placeholder{color:#93a3bf}
+.try{font-size:13.5px;color:rgba(255,255,255,.72);margin:12px 0 0}
+.try b{color:#fff;font-weight:700;cursor:pointer;border-bottom:1px dashed rgba(255,255,255,.45)}
+.live{display:inline-flex;align-items:center;gap:8px;margin-top:20px;font-size:13px;
+      color:rgba(255,255,255,.78);font-family:var(--m)}
+.dot{width:7px;height:7px;border-radius:50%;background:#7CFFB0;box-shadow:0 0 0 0 rgba(124,255,176,.7);
+     animation:pulse 2.2s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 9px rgba(124,255,176,0)}100%{box-shadow:0 0 0 0 rgba(124,255,176,0)}}
+
+/* ---------- live card ---------- */
+.stage{position:relative;min-height:400px;display:flex;align-items:center;justify-content:center}
+.card{width:340px;background:#fff;color:var(--ink);border-radius:20px;padding:22px;
+      box-shadow:0 26px 60px rgba(4,26,74,.32);position:relative}
+.chd{display:flex;justify-content:space-between;align-items:center;font-family:var(--m);font-size:10.5px;
+     letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin-bottom:16px}
+.chd .on{color:var(--ok);display:inline-flex;align-items:center;gap:6px}
+.sw{transition:opacity .34s,transform .34s}
+.sw.out{opacity:0;transform:translateY(8px)}
+.av{width:78px;height:78px;border-radius:50%;background:var(--tint);object-fit:cover;display:block;
+    margin:0 auto 12px;opacity:0;transition:opacity .3s}
+.av.ok{opacity:1}
+.cn{text-align:center;font-weight:800;font-size:20px;letter-spacing:-.02em}
+.ch{text-align:center;color:var(--mut);font-size:13.5px;margin-top:2px}
+.hrs{margin-top:16px;background:var(--tint);border-radius:13px;padding:13px 15px;display:flex;
+     justify-content:space-between;align-items:baseline}
+.hrs span{font-family:var(--m);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
+.hrs b{font-size:22px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.pay{margin-top:9px;display:flex;justify-content:space-between;font-size:13px;color:var(--grey)}
+.pay b{color:var(--ok);font-weight:700}
+.dots{display:flex;gap:6px;justify-content:center;margin-top:18px}
+.dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.34)}
+.dots i.a{background:#fff;width:18px;border-radius:3px}
+
+/* ---------- marquee ---------- */
+.mq{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    padding:15px 0;overflow:hidden}
+.mqr{display:flex;width:max-content;animation:run 52s linear infinite}
+.mq:hover .mqr{animation-play-state:paused}
+@keyframes run{to{transform:translateX(-50%)}}
+.mqi{display:flex;align-items:center;gap:9px;margin-right:30px}
+.mqi img{width:34px;height:34px;border-radius:50%;background:var(--tint);opacity:0;transition:opacity .3s}
+.mqi img.ok{opacity:1}
+.mqi span{font-size:13.5px;font-weight:600;color:var(--ink)}
+.mqi em{font-style:normal;font-family:var(--m);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+        color:var(--az);background:#e7efff;border-radius:6px;padding:3px 7px}
+
+/* ---------- generic sections ---------- */
+.sec{padding:78px 0}
+.hd{max-width:620px;margin-bottom:40px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.step{padding:26px 22px 26px 0;border-top:1.5px solid var(--line)}
+.b-brand .step,.b-ink .step{border-color:rgba(255,255,255,.26)}
+.step i{font-style:normal;font-family:var(--m);font-size:12px;color:var(--az);font-weight:700}
+.b-brand .step i,.b-ink .step i{color:#fff;opacity:.72}
+.step h3{margin:12px 0 8px;font-size:18px;letter-spacing:-.015em}
+.step p{margin:0;font-size:14.5px;color:var(--grey)}
+.b-brand .step p,.b-ink .step p{color:rgba(255,255,255,.76)}
+
+/* ---------- form / calc ---------- */
+.grid2{display:grid;grid-template-columns:1.1fr .9fr;gap:44px;align-items:start}
+.fld{margin-bottom:20px}
+.lab{font-family:var(--m);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+     color:var(--mut);display:block;margin-bottom:8px}
+.b-brand .lab{color:rgba(255,255,255,.7)}
+.inp{display:flex;gap:8px}
+.inp input,.inp select{flex:1;border:1.5px solid var(--line);background:#fff;border-radius:12px;
+       padding:12px 14px;font:inherit;font-size:15.5px;color:var(--ink);outline:0}
+.inp input:focus{border-color:var(--az)}
+.out{margin-top:14px;background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:16px}
+.b-brand .out{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff}
+.orow{display:flex;justify-content:space-between;gap:14px;padding:8px 0;font-size:14.5px}
+.orow+.orow{border-top:1px solid var(--line)}
+.b-brand .orow+.orow{border-color:rgba(255,255,255,.22)}
+.orow b{font-family:var(--m);font-variant-numeric:tabular-nums}
+.code{font-family:var(--m);font-size:19px;font-weight:700;letter-spacing:.06em;color:var(--az)}
+.b-brand .code{color:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1.5px solid var(--line);background:#fff;border-radius:11px;padding:9px 13px;font:inherit;
+      font-size:13.5px;font-weight:600;cursor:pointer;color:var(--ink)}
+.chip.on{border-color:var(--az);background:#e7efff;color:var(--az)}
+.note{font-size:13px;color:var(--mut);margin:10px 0 0}
+.b-brand .note{color:rgba(255,255,255,.66)}
+
+/* ---------- split bar ---------- */
+.bar{display:flex;height:42px;border-radius:12px;overflow:hidden;margin:6px 0 10px;font-family:var(--m);
+     font-size:11px;letter-spacing:.06em}
+.bar div{display:flex;align-items:center;justify-content:center;color:#fff;transition:flex-basis .3s}
+.s1{background:var(--az)}.s2{background:#4b8bfb}.s3{background:var(--ink2)}
+
+/* ---------- wall / empty ---------- */
+.empty{border:1.5px dashed var(--line);border-radius:18px;padding:52px 30px;text-align:center}
+.empty h3{margin:0 0 10px;font-size:22px;letter-spacing:-.02em}
+.empty p{margin:0 auto 22px;color:var(--grey);max-width:44ch;font-size:15px}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th{text-align:left;font-family:var(--m);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+   color:rgba(255,255,255,.6);font-weight:600;padding:0 0 12px}
+td{padding:14px 0;border-top:1px solid rgba(255,255,255,.18)}
+.b-ink td{color:rgba(255,255,255,.88)}
+
+/* ---------- faq ---------- */
+details{border-top:1.5px solid var(--line);padding:18px 0}
+details:last-of-type{border-bottom:1.5px solid var(--line)}
+summary{cursor:pointer;font-weight:700;font-size:17px;letter-spacing:-.015em;list-style:none;
+        display:flex;justify-content:space-between;gap:16px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--az);font-weight:800}
+details[open] summary::after{content:"–"}
+details p{margin:12px 0 0;color:var(--grey);font-size:15px;max-width:68ch}
+
+/* ---------- reveal ---------- */
+.rv{opacity:0;transform:translateY(14px);transition:opacity .55s,transform .55s}
+.rv.vis{opacity:1;transform:none}
+
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;gap:34px;padding:52px 0 60px}
+  .grid2{grid-template-columns:1fr;gap:30px}
+  .steps{grid-template-columns:1fr 1fr}
+  .nlinks{display:none}
+  .nb{grid-template-columns:1fr auto}
+  .sec{padding:56px 0}
+}
+@media(max-width:560px){.steps{grid-template-columns:1fr}.card{width:100%}}
+</style>
+</head>
+<body>
+
+<div class="band b-brand">
+  <nav class="nav">
+    <div class="wrap nb">
+      <a class="brand" href="#top"><img src="logo.png" alt="">afk</a>
+      <div class="nlinks">
+        <a href="#how">How it works</a>
+        <a href="#launch">Launch</a>
+        <a href="#math">The maths</a>
+        <a href="#wall">The wall</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div class="nright"><a class="btn btn-w" href="#launch">Launch a coin ↗</a></div>
+    </div>
+  </nav>
+
+  <div class="wrap hero" id="top">
+    <div>
+      <p class="kick">Away from keyboard · Robinhood Chain</p>
+      <h1>Get paid<br>to log off.</h1>
+      <p class="lead">Every hour you hold, the vault pays you in a real stock. Sell any amount and your clock resets to zero. Hand supply to any X handle and it earns while they're gone.</p>
+      <div class="pill">
+        <input id="qh" placeholder="@handle on X" autocomplete="off" spellcheck="false">
+        <button class="btn btn-b" id="qb">Check ↗</button>
+      </div>
+      <p class="try">Try <b data-h="blknoiz06">@blknoiz06</b> <b data-h="cobie">@cobie</b> <b data-h="zachxbt">@zachxbt</b> — read live from X, nothing cached.</p>
+      <p class="live"><i class="dot"></i> Built on Pons · readers live</p>
+    </div>
+    <div class="stage">
+      <div class="card" id="card">
+        <div class="chd"><span>Holding</span><span class="on"><i class="dot"></i> Live</span></div>
+        <div class="sw" id="sw">
+          <img class="av" id="cav" alt="">
+          <div class="cn" id="cname">—</div>
+          <div class="ch" id="chandle">—</div>
+        </div>
+        <div class="hrs"><span>Hours banked</span><b id="chours">0</b></div>
+        <div class="pay"><span>Next payout</span><b id="cnext">in 00:00</b></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mq bleed"><div class="mqr" id="mqr"></div></div>
+
+<section class="band b-white sec" id="how">
+  <div class="wrap">
+    <div class="hd rv">
+      <p class="kick">From a handle to an hourly wage</p>
+      <h2>Four steps.<br>One clock that never stops.</h2>
+    </div>
+    <div class="steps rv">
+      <div class="step"><i>01</i><h3>Launch a coin</h3><p>Name it, pick the stock it pays in, sign one Pons transaction. Liquidity is locked by the protocol, not by us.</p></div>
+      <div class="step"><i>02</i><h3>The vault fills</h3><p>From the very first trade, half of one percent of every trade goes into the coin's vault. Nothing sits in a wallet.</p></div>
+      <div class="step"><i>03</i><h3>You do nothing</h3><p>Every hour the vault pays out to holders, pro rata by balance multiplied by hours held. Sell anything and your hours reset.</p></div>
+      <div class="step"><i>04</i><h3>They get paid too</h3><p>Assign supply to any X handle. It banks hours for them while they're gone. They claim with one code — no wallet, no signup.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="band b-brand sec" id="launch">
+  <div class="wrap">
+    <div class="hd rv">
+      <p class="kick">One form, one transaction</p>
+      <h2>Launch a coin.</h2>
+    </div>
+    <div class="grid2">
+      <div class="rv">
+        <div class="fld">
+          <label class="lab" for="lh">Who is it for</label>
+          <div class="inp">
+            <input id="lh" placeholder="@handle on X" autocomplete="off" spellcheck="false">
+            <button class="btn btn-w" id="lb">Check</button>
+          </div>
+          <div class="out" id="lout"><p class="note" style="margin:0">Nothing checked yet. Every handle is verified against X before anything is signed.</p></div>
+        </div>
+        <div class="fld">
+          <label class="lab">Share of the creator fee that is held for them</label>
+          <div class="chips" id="shareChips">
+            <button class="chip" data-v="0">0%</button>
+            <button class="chip on" data-v="30">30%</button>
+            <button class="chip" data-v="50">50%</button>
+            <button class="chip" data-v="100">100%</button>
+          </div>
+        </div>
+        <div class="fld">
+          <label class="lab">Paid in</label>
+          <div class="chips" id="stockChips">
+            <button class="chip on" data-v="SPY">$SPY</button>
+            <button class="chip" data-v="SGOV">$SGOV</button>
+            <button class="chip" data-v="NVDA">$NVDA</button>
+            <button class="chip" data-v="AAPL">$AAPL</button>
+            <button class="chip" data-v="GLD">$GLD</button>
+          </div>
+        </div>
+      </div>
+      <div class="rv">
+        <label class="lab">Where every dollar of the 1% trade fee goes</label>
+        <div class="bar">
+          <div class="s1" id="bh" style="flex:0 0 50%">HOLDERS</div>
+          <div class="s2" id="bp" style="flex:0 0 20%">THEM</div>
+          <div class="s3" style="flex:0 0 30%">PONS</div>
+        </div>
+        <div class="out">
+          <div class="orow"><span>Pons trade fee</span><b>1.00%</b></div>
+          <div class="orow"><span>Into the hourly vault</span><b id="kHold">0.500% of volume</b></div>
+          <div class="orow"><span>Held for the handle</span><b id="kThem">0.200% of volume</b></div>
+          <div class="orow"><span>Protocol</span><b>0.300% of volume</b></div>
+        </div>
+        <p class="note">Check a handle to see the claim code they would post.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band b-tint sec" id="math">
+  <div class="wrap">
+    <div class="hd rv">
+      <p class="kick">Do the maths yourself</p>
+      <h2>What an hour is worth.</h2>
+    </div>
+    <div class="grid2">
+      <div class="rv">
+        <div class="fld">
+          <label class="lab" for="ca">Any live coin on Robinhood Chain</label>
+          <div class="inp">
+            <input id="ca" value="0x32fad9f482eb629dc7cb078824763e59441ee076" spellcheck="false">
+            <button class="btn btn-b" id="cb">Read it</button>
+          </div>
+        </div>
+        <p class="note">Volume and market cap come from Dexscreener; holders from the Robinhood Chain explorer. Nothing on this page is estimated.</p>
+      </div>
+      <div class="rv">
+        <div class="out" id="cout">
+          <div class="orow"><span>Coin</span><b id="mName">—</b></div>
+          <div class="orow"><span>24h volume</span><b id="mVol">—</b></div>
+          <div class="orow"><span>Holders</span><b id="mHold">—</b></div>
+          <div class="orow"><span>Into the vault per day</span><b id="mDay">—</b></div>
+          <div class="orow"><span>Paid out per hour</span><b id="mHour">—</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band b-white sec" id="wall">
+  <div class="wrap">
+    <div class="hd rv">
+      <p class="kick">Every coin launched here</p>
+      <h2>The wall.</h2>
+    </div>
+    <div class="empty rv">
+      <h3>The wall is empty.</h3>
+      <p>No coin has been launched on AFK yet, so there is nothing to show and nothing to invent. The first one on this wall could be yours.</p>
+      <a class="btn btn-b" href="#launch">Launch the first one ↗</a>
+    </div>
+  </div>
+</section>
+
+<section class="band b-ink sec" id="proof">
+  <div class="wrap">
+    <div class="hd rv">
+      <p class="kick">No snapshot, no form</p>
+      <h2>Hours are read<br>off the chain.</h2>
+    </div>
+    <div class="steps rv" style="margin-bottom:34px">
+      <div class="step"><i>01</i><h3>Your clock is public</h3><p>Hours banked is your balance multiplied by the time since your last sell. Anyone can compute it from the explorer.</p></div>
+      <div class="step"><i>02</i><h3>Selling resets it</h3><p>Any outgoing transfer sets your clock to zero. Not a penalty — just the rule, applied the same way to everyone.</p></div>
+      <div class="step"><i>03</i><h3>The vault is an address</h3><p>Its balance is the pot. Published the moment a coin is live, so the payout can be checked against it.</p></div>
+      <div class="step"><i>04</i><h3>Payouts land hourly</h3><p>Every hour, on the hour, in the stock the coin was launched against. If a payout is missed, the chain says so.</p></div>
+    </div>
+    <table class="rv">
+      <thead><tr><th>Hour</th><th>Vault paid</th><th>Holders</th><th>Proof</th></tr></thead>
+      <tbody><tr><td colspan="4" style="color:rgba(255,255,255,.6)">No payouts yet. Every one will land here with its transaction.</td></tr></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="band b-tint sec" id="faq">
+  <div class="wrap">
+    <div class="hd rv"><p class="kick">Straight answers</p><h2>FAQ</h2></div>
+    <div class="rv">
+      <details><summary>What stops someone holding for an hour and dumping?</summary><p>Nothing — and they should. Hours banked is balance multiplied by time, so one hour of holding earns one hour's worth. The wallet that held for forty hours simply outweighs them. There is no lockup and no penalty; the clock is the whole mechanism.</p></details>
+      <details><summary>Do I need the person's permission to assign them supply?</summary><p>No, and they do not need a wallet. Their share accrues to an address only they can claim, by posting a code from the account. If they never claim it, it stays there. AFK is not affiliated with any platform and coins are not endorsed by the people they are launched for.</p></details>
+      <details><summary>How does someone claim?</summary><p>They post their code from the handle it was launched on. The code is derived from the handle itself, so it can be checked by anyone without trusting us. Check a handle in the launch form to see exactly what theirs would be.</p></details>
+      <details><summary>Where do the numbers on this page come from?</summary><p>Handles and avatars are read live from X. Volume and market cap come from Dexscreener, holders from the Robinhood Chain explorer. Nothing is cached overnight and nothing is estimated — where a number does not exist yet, the page says so instead of filling it in.</p></details>
+      <details><summary>Is the token live?</summary><p>Not yet. When it is, the contract address will appear at the top of this page and in the pinned post. Anyone posting a contract address before it appears here is scamming you.</p></details>
+    </div>
+  </div>
+</section>
+
+<script>
+const CONFIG={ca:'',x:'',pool:'',chart:'',launchpad:'https://ponsvault.com/launch'};
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const money=n=>n==null?'—':'$'+(n>=1e6?(n/1e6).toFixed(2)+'M':n>=1e3?(n/1e3).toFixed(1)+'K':n.toFixed(2));
+
+/* claim code — FNV-1a over 'afk:<handle>' */
+function claimCode(h){let x=0x811c9dc5;for(const c of('afk:'+h.toLowerCase())){x^=c.charCodeAt(0);x=Math.imul(x,0x01000193)>>>0}
+  return 'AFK-'+x.toString(36).toUpperCase().padStart(7,'0').slice(-7)}
+
+/* ---------- handle reader ---------- */
+const hcache={};
+async function pull(h){
+  h=h.replace(/^@/,'').trim(); if(!h) return null;
+  if(hcache[h]!==undefined) return hcache[h];
+  try{const r=await fetch('/api/handle?h='+encodeURIComponent(h));
+      const j=r.ok?await r.json():null; hcache[h]=j; return j}
+  catch(e){hcache[h]=null; return null}
+}
+function avatarURL(h){return '/api/avatar?h='+encodeURIComponent(h.replace(/^@/,''))}
+
+/* ---------- rotating live card ---------- */
+const ROTA=['blknoiz06','Cupseyy','notthreadguy','inversebrah','CryptoKaleo','MustStopMurad','cobie','zachxbt'];
+let ri=0, hoursSeed=[];
+ROTA.forEach((h,i)=>hoursSeed.push(0));
+function paintCard(j,h,idx){
+  const sw=$('#sw'); sw.classList.add('out');
+  setTimeout(()=>{
+    $('#cname').textContent=j&&j.name?j.name:'@'+h;
+    $('#chandle').textContent='@'+(j&&j.handle?j.handle:h);
+    const img=$('#cav'); img.classList.remove('ok'); img.onload=()=>img.classList.add('ok');
+    img.src=avatarURL(h);
+    sw.classList.remove('out');
+  },340);
+}
+async function spin(){
+  const h=ROTA[ri%ROTA.length];
+  paintCard(await pull(h),h,ri);
+  ri++;
+}
+/* hours tick up so the card is visibly alive; resets with each handle */
+let hrs=0;
+setInterval(()=>{hrs=(hrs+1)%9999;$('#chours').textContent=(hrs).toLocaleString()},900);
+function nextHour(){
+  const n=new Date(), s=3600-(n.getUTCMinutes()*60+n.getUTCSeconds());
+  const m=String(Math.floor(s/60)).padStart(2,'0'), ss=String(s%60).padStart(2,'0');
+  $('#cnext').textContent='in '+m+':'+ss;
+}
+setInterval(nextHour,1000); nextHour();
+spin(); let spinner=setInterval(spin,4600);
+$('#card').addEventListener('mouseenter',()=>clearInterval(spinner));
+$('#card').addEventListener('mouseleave',()=>spinner=setInterval(spin,4600));
+
+/* ---------- marquee ---------- */
+const MQ=['blknoiz06','cobie','notthreadguy','Cupseyy','inversebrah','CryptoKaleo','MustStopMurad',
+          'zachxbt','frankdegods','IcoBeast','Cented7','orangie','gainzy222','mrpunkdoteth',
+          'HsakaTrades','traderpow','nyhrox','VitalikButerin'];
+(function(){
+  const r=$('#mqr');
+  const make=h=>{
+    const d=document.createElement('div'); d.className='mqi';
+    const i=document.createElement('img'); i.referrerPolicy='no-referrer'; i.alt='';
+    i.onload=()=>i.classList.add('ok'); i.src=avatarURL(h);
+    const s=document.createElement('span'); s.textContent='@'+h;
+    const e=document.createElement('em'); e.textContent='afk';
+    d.append(i,s,e); return d;
+  };
+  MQ.forEach(h=>r.appendChild(make(h)));
+  MQ.forEach(h=>r.appendChild(make(h)));
+})();
+
+/* ---------- handle check (hero + form) ---------- */
+function renderHandle(j,h,box){
+  if(!j||j.exists===false){box.innerHTML='<p class="note" style="margin:0">No account called @'+h+' on X. Check the spelling.</p>';return}
+  const f=j.followers!=null?j.followers.toLocaleString():'—';
+  box.innerHTML=
+   '<div class="orow"><span>Account</span><b>'+(j.name||'@'+h)+'</b></div>'+
+   '<div class="orow"><span>Handle</span><b>@'+(j.handle||h)+'</b></div>'+
+   '<div class="orow"><span>Followers</span><b>'+f+'</b></div>'+
+   '<div class="orow"><span>Their claim code</span><b class="code">'+claimCode(j.handle||h)+'</b></div>';
+}
+async function check(inp,box,btn){
+  const h=inp.value.replace(/^@/,'').trim(); if(!h)return;
+  const old=btn.textContent; btn.textContent='…'; btn.disabled=true;
+  renderHandle(await pull(h),h,box);
+  btn.textContent=old; btn.disabled=false;
+}
+$('#qb').onclick=()=>{$('#lh').value=$('#qh').value;document.getElementById('launch').scrollIntoView();check($('#lh'),$('#lout'),$('#lb'))};
+$('#qh').addEventListener('keydown',e=>{if(e.key==='Enter')$('#qb').click()});
+$('#lb').onclick=()=>check($('#lh'),$('#lout'),$('#lb'));
+$('#lh').addEventListener('keydown',e=>{if(e.key==='Enter')$('#lb').click()});
+$$('.try b').forEach(b=>b.onclick=()=>{$('#qh').value='@'+b.dataset.h;$('#qb').click()});
+
+/* ---------- split chips ---------- */
+let themShare=30;
+function paintSplit(){
+  const creator=0.70;                      // 70% of the 1% fee
+  const them=creator*(themShare/100);
+  const hold=creator-them;
+  $('#kHold').textContent=hold.toFixed(3)+'% of volume';
+  $('#kThem').textContent=them.toFixed(3)+'% of volume';
+  $('#bh').style.flexBasis=(hold*100)+'%';
+  $('#bp').style.flexBasis=(them*100)+'%';
+  $('#bh').textContent=hold>0.12?'HOLDERS':'';
+  $('#bp').textContent=them>0.12?'THEM':'';
+}
+$$('#shareChips .chip').forEach(c=>c.onclick=()=>{
+  $$('#shareChips .chip').forEach(x=>x.classList.remove('on'));
+  c.classList.add('on'); themShare=+c.dataset.v; paintSplit();
+});
+$$('#stockChips .chip').forEach(c=>c.onclick=()=>{
+  $$('#stockChips .chip').forEach(x=>x.classList.remove('on')); c.classList.add('on');
+});
+paintSplit();
+
+/* ---------- coin reader ---------- */
+async function readCoin(){
+  const ca=$('#ca').value.trim().toLowerCase();
+  if(!/^0x[0-9a-f]{40}$/.test(ca)){$('#mName').textContent='not an address';return}
+  const b=$('#cb'); b.textContent='…'; b.disabled=true;
+  try{
+    const r=await fetch('/api/coin?ca='+ca); const j=await r.json();
+    $('#mName').textContent=j.symbol?('$'+j.symbol):(j.name||'not found');
+    $('#mVol').textContent=j.volume24!=null?money(j.volume24):'—';
+    $('#mHold').textContent=j.holders!=null?j.holders.toLocaleString():'—';
+    if(j.volume24!=null){
+      const day=j.volume24*0.005;
+      $('#mDay').textContent=money(day);
+      $('#mHour').textContent=money(day/24);
+    }else{$('#mDay').textContent='—';$('#mHour').textContent='—'}
+    if(j.holders==null) retryHolders(ca,0);
+  }catch(e){$('#mName').textContent='could not read'}
+  b.textContent='Read it'; b.disabled=false;
+}
+/* Blockscout 403s from the server but answers the browser — retry client-side, never cache the null */
+async function retryHolders(ca,n){
+  if(n>1)return;
+  setTimeout(async()=>{
+    try{
+      const r=await fetch('https://robinhoodchain.blockscout.com/api/v2/tokens/'+ca,{headers:{accept:'application/json'}});
+      if(r.ok){const j=await r.json();const h=j.holders_count??j.holders;
+        if(h!=null)$('#mHold').textContent=(+h).toLocaleString(); else retryHolders(ca,n+1)}
+      else retryHolders(ca,n+1);
+    }catch(e){retryHolders(ca,n+1)}
+  },900);
+}
+$('#cb').onclick=readCoin;
+$('#ca').addEventListener('keydown',e=>{if(e.key==='Enter')readCoin()});
+readCoin();
+
+/* ---------- reveal ---------- */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}}),{threshold:.12});
+$$('.rv').forEach(e=>io.observe(e));
+</script>
+</body>
+</html>
